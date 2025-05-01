@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         put("La ciudad perdida", "SVQ2");
         put("Sala del Generador", "XRZ");
         put("Carrera de Rocas", "GND2");
-
     }};
     private Switch switchUbicacion;
     MediaPlayer woah, crash;
@@ -57,12 +56,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         switchUbicacion = findViewById(R.id.switch_ubicacion);
         woah = MediaPlayer.create(this, R.raw.woah);
         crash = MediaPlayer.create(this, R.raw.crash);
-//         ==============================
-//           Inicialización del mapa
-//         ==============================
-//         Obtiene el fragmento del mapa desde el layout usando su ID.
-//         Luego registra esta actividad como callback para recibir
-//         el mapa de forma asíncrona cuando esté listo (onMapReady).
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -82,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //     - Se mueve la cámara del mapa hacia esa ubicación con un nivel de zoom adecuado.
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        mMap = googleMap;//cargo el mapa
+        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN); //textura del mapa
         LatLng donana = new LatLng(37.0446692671068, -6.434814920751725);
         LatLng catedralSVQ = new LatLng(37.38611549909602, -5.993203147477926);
         LatLng palacioCarlosV = new LatLng(37.176983392755886, -3.5899428748528086);
@@ -163,13 +156,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         "\nActividad:Desciende la ladera para que el monitor de te la contraseña." +
                         "\nPASS:GND2")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.skull)));
-
+//funcionalidad del marker
         mMap.setOnMarkerClickListener(marker -> {
             mostrarDialogoActividad(marker.getTitle(), marker.getSnippet());
             return true;
         });
 
-
+//funcionalidad al swotch
         switchUbicacion.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -199,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                             Zoom 18  → Detalle de calle (coches, edificios)
 //                             Zoom 21  → Máximo zoom (muy cerca, vista de edificios o interiores)
     private void showMyLocationOnMap() {
+        //comprobar permiso de localizacion del usuario
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -212,39 +206,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    //     ==============================
-//       Respuesta a la petición de permisos
-//     ==============================
-//     Esta función se ejecuta automáticamente cuando el usuario responde
-//     al diálogo de permisos.
-//
-//     - Comprueba si el permiso fue concedido.
-//     - Si lo fue, vuelve a verificar que se tiene el permiso de ubicación.
-//     - Si va bien, activa la capa de "mi ubicación" (punto azul) en el mapa.
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    showMyLocationOnMap();
-                }
-            }
-        }
-    }
 //metodo para mostrar la info de la localización
     private void mostrarDialogoActividad(String titulo, String prueba) {
         woah.start();
         AlertDialog.Builder builder = new AlertDialog.Builder(this); //creo cuadro
         builder.setTitle(titulo); //setteo nombre de la localizacion
         builder.setMessage(prueba); //setteo descripcion de la prueba
-
         final EditText input = new EditText(this); //campo de la contraseña
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);//formato de text de contraseña
         builder.setView(input); //setteo en dialogo
-
         //botones del cuadro
         builder.setPositiveButton("Finalizar", null);
         builder.setNegativeButton("Cancelar", null);
@@ -266,8 +236,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Toast.makeText(this, "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
                 }
             });
-        });
-        dialog.show();
+        });dialog.show();
     }
-
 }
