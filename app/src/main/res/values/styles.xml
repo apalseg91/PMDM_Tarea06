@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CrashTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/crash</item>
+        <item name="android:textColor">#FF9C00</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+</resources>
